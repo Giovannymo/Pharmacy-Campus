@@ -25,4 +25,15 @@ public class PatientController : BaseApiController
         var patients = await _unitOfWork.People.GetSalePatientProduct(product);
         return _mapper.Map<List<SalePatientProdDto>>(patients);
      }
+
+    [HttpGet("{product}/{date}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IEnumerable<SalePatientProdDto>> Get2(string product, int date)
+    {
+    var patients = await _unitOfWork.People.GetSalePatientProductYear(product, date);
+    return _mapper.Map<List<SalePatientProdDto>>(patients);
+    }
+
+    
 }

@@ -26,6 +26,16 @@ public class EmployeeController : BaseApiController
         return _mapper.Map<List<EmployeeDto>>(employees);
     }
 
+    [HttpGet("sales/{quantity}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IEnumerable<SalePatientProdDto>> Get2(int sales)
+    {
+    var patients = await _unitOfWork.People.GetSaleEmployee(sales);
+    return _mapper.Map<List<SalePatientProdDto>>(patients);
+    } 
+
+
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
