@@ -45,14 +45,6 @@ public class PersonRepository : GenericRepository<Person>, IPerson
 
 
 
-
-    //Obtiene todos los proveedores que no han vendido en ultimo año
-  public async Task<IEnumerable<Person>> GetSuppliersNoSalesAtYear()
-  {
-    return new List<Person>();
-
-  }
-
 }
 
 /* return await (from p in _context.Products 
