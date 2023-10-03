@@ -28,7 +28,6 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         .HasColumnType("DateTime");
 
         builder.Property(p => p.Revoked)
-        .IsRequired()
         .HasColumnType("DateTime");
 
     }

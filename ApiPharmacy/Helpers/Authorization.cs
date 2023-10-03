@@ -4,12 +4,14 @@ public class Authorization
 {
     public enum JobsTitle
         {
-            Administrator,
-            Manager,
-            Employee
+            Administrador,
+            Gerente,
+            Cajero,
+            Doctor,
+
         }
 
-        public const JobsTitle rol_default = JobsTitle.Employee;
+        public const JobsTitle rol_default = JobsTitle.Cajero;
 
 
 }

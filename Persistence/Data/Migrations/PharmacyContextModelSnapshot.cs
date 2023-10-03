@@ -414,7 +414,6 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("DateTime");
 
                     b.Property<DateTime?>("Revoked")
-                        .IsRequired()
                         .HasColumnType("DateTime");
 
                     b.Property<string>("Token")

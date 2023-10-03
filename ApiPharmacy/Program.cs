@@ -1,5 +1,6 @@
 using System.Reflection;
 using ApiPharmacy.Extensions;
+using AspNetCoreRateLimit;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.ConfigureCors(); // aplica el cors de serviceExtension
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly()); // aplica automapper
 builder.Services.AddJwt(builder.Configuration); //Aplicacion de JWT
+builder.Services.ConfigureRateLimiting();
+builder.Services.ConfigureApiVersioning();  
 builder.Services.AddAplicacionServices(); // para que aplique el archivo de extensions
 builder.Services.AddDbContext<PharmacyContext>(options =>
 {
@@ -46,15 +49,9 @@ using(var scope= app.Services.CreateScope()){
     logger.LogError(ex,"Ocurrió un error durante la migración");
     }
 }
-
-app.UseCors("CorsPolicy");
-
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
+app.UseCors("CorsPolicy"); //- le decimos que use el cors "CorsPolicy"
 app.UseAuthorization();
-
+app.UseIpRateLimiting();
 app.MapControllers();
-
 app.Run();

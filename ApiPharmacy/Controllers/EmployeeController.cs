@@ -2,9 +2,11 @@ using ApiPharmacy.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPharmacy.Controllers;
+[Authorize(Roles = "Gerente , Administrador")]
 
 public class EmployeeController : BaseApiController
 {
@@ -19,6 +21,8 @@ public class EmployeeController : BaseApiController
 
     //Obterner Todos los Empleados
     [HttpGet("List")]
+    [AllowAnonymous]
+    [Authorize(Roles = "Cajero")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<EmployeeDto>>> Get()
@@ -87,8 +91,18 @@ public class EmployeeController : BaseApiController
         return _mapper.Map<List<SalesEmployeDto>>(employees);
     }
 
-
+    //Empleado que ha vendido la mayor cantidad de medicamentos distintos en 2023
+    [HttpGet("GetEmployeeDifferentProducts/{year}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<EmployeeDto>> Get6(int year)
+    {
+        var employee = await _unitOfWork.People.GetEmployeeDifferentProducts(year);
+        return _mapper.Map<EmployeeDto>(employee);
+    }
+    
     [HttpGet("Unique/{id}")]
+    [Authorize(Roles = "Cajero")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<EmployeeDto>> Get(string id)
@@ -99,6 +113,7 @@ public class EmployeeController : BaseApiController
 
 
     [HttpPost]
+    [Authorize(Roles = "Cajero")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Person>> Post(EmployeeDto employeeDto)
@@ -114,8 +129,9 @@ public class EmployeeController : BaseApiController
         return CreatedAtAction(nameof(Post), new { id = employeeDto.Id }, employeeDto);
     }
 
-
     [HttpPut("{id}")]
+    [AllowAnonymous]
+    [Authorize(Roles = "Cajero")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<EmployeeDto>> Put([FromBody] EmployeeDto employeeDto)
@@ -132,6 +148,8 @@ public class EmployeeController : BaseApiController
     }
 
     [HttpDelete("{id}")]
+    [AllowAnonymous]
+    [Authorize(Roles = "Cajero")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(string id)
@@ -148,15 +166,7 @@ public class EmployeeController : BaseApiController
         return NoContent();
     }
 
-    //Empleado que ha vendido la mayor cantidad de medicamentos distintos en 2023
-    [HttpGet("GetEmployeeDifferentProducts/{year}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<EmployeeDto>> Get6(int year)
-    {
-        var employee = await _unitOfWork.People.GetEmployeeDifferentProducts(year);
-        return _mapper.Map<EmployeeDto>(employee);
-    }
+
 
 
 }

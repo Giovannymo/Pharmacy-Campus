@@ -141,7 +141,7 @@ namespace Persistence.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    StateName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Country_Fk = table.Column<int>(type: "int", nullable: false)
                 },
@@ -163,15 +163,15 @@ namespace Persistence.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Identification = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IdentificationType_Fk = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Identification = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PersonType_Fk = table.Column<int>(type: "int", nullable: false),
                     Role_Fk = table.Column<int>(type: "int", nullable: false),
-                    JobTitle_Fk = table.Column<int>(type: "int", nullable: false),
-                    HireDate = table.Column<DateTime>(type: "DATETIME", nullable: false)
+                    JobTitle_Fk = table.Column<int>(type: "int", nullable: true),
+                    HireDate = table.Column<DateTime>(type: "DATETIME", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -186,8 +186,7 @@ namespace Persistence.Data.Migrations
                         name: "FK_Person_JobTitle_JobTitle_Fk",
                         column: x => x.JobTitle_Fk,
                         principalTable: "JobTitle",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Person_PersonType_PersonType_Fk",
                         column: x => x.PersonType_Fk,
@@ -404,17 +403,16 @@ namespace Persistence.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Employee_Fk = table.Column<int>(type: "int", nullable: false)
+                    PersonId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Person_Employee_Fk",
-                        column: x => x.Employee_Fk,
+                        name: "FK_User_Person_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -537,7 +535,7 @@ namespace Persistence.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Expires = table.Column<DateTime>(type: "DateTime", nullable: false),
                     Created = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    Revoked = table.Column<DateTime>(type: "DateTime", nullable: false)
+                    Revoked = table.Column<DateTime>(type: "DateTime", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -749,9 +747,9 @@ namespace Persistence.Data.Migrations
                 column: "TelephoneType_Fk");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Employee_Fk",
+                name: "IX_User_PersonId",
                 table: "User",
-                column: "Employee_Fk");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_User_Fk",

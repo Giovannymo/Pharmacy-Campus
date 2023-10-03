@@ -3,6 +3,7 @@ using Application.UnitOfWork;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPharmacy.Controllers;
@@ -20,7 +21,7 @@ public class SupplierController : BaseApiController
   }
 
   //Obterner Todos los Proveedores
-  [HttpGet]
+  [HttpGet("List")]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
   public async Task<ActionResult<IEnumerable<SupplierDto>>> Get()
@@ -30,6 +31,8 @@ public class SupplierController : BaseApiController
   }
 
   //Ganancia total por proveedor en el Año (X)
+  [Authorize(Roles = "Administrador")]
+ 
   [HttpGet("TotalSupplierGain/{year}")]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,12 +43,12 @@ public class SupplierController : BaseApiController
   }
 
   //Proveedores  que no han vendido ningún medicamento en Un año Especifico
-  [HttpGet("NeverSell/{date}")]
+  [HttpGet("NeverSell/{year}")]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  public async Task<ActionResult<IEnumerable<SupplierDto>>> Get3(int date)
+  public async Task<ActionResult<IEnumerable<SupplierDto>>> Get3(int year)
   {
-      var supplier = await _unitOfWork.People.GetSupplierNeverSell(date);
+      var supplier = await _unitOfWork.People.GetSupplierNeverSell(year);
       return _mapper.Map<List<SupplierDto>>(supplier);
   }
 
@@ -96,14 +99,14 @@ public class SupplierController : BaseApiController
   }
 
 
-  [HttpGet("{id}")]
+  [HttpGet("Unique/{id}")]
   [ProducesResponseType(StatusCodes.Status200OK)]
-  [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  public async Task<IActionResult> Get(int id)
-  {
-    var supplier = await _unitOfWork.People.GetByIdAsync(id);
-    return Ok(supplier);
-  }
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<SupplierDto>> Get(string id)
+    {
+        var supplier = await _unitOfWork.People.GetByIdAsync(id);
+        return _mapper.Map<SupplierDto>(supplier);
+    }
 
   [HttpPost]
   [ProducesResponseType(StatusCodes.Status200OK)]
@@ -141,7 +144,7 @@ public class SupplierController : BaseApiController
   [HttpDelete("{id}")]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  public async Task<IActionResult> Delete(int id)
+  public async Task<IActionResult> Delete(string id)
   {
     var supplier = await _unitOfWork.People.GetByIdAsync(id);
     if (supplier == null)
@@ -155,6 +158,7 @@ public class SupplierController : BaseApiController
     return NoContent();
   }
 
+  //Total de medicamentos vendidos por cada proveedor
   [HttpGet("GetProductsSoldEachSupplier")]
   [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]

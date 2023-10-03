@@ -226,7 +226,7 @@ public override async Task<Person> GetByIdAsync(string id)
         .Select(group => new SupplierGain
         {
             Supplier = group.Key,
-            TotalGain = Math.Round(group.Sum(sp => sp.Price * sp.Quantity))
+            TotalGain = Math.Round(group.Sum(sp => (sp.Product.Price * sp.Quantity)-(sp.Price * sp.Quantity)))
         })
         .ToListAsync();
     }
@@ -251,6 +251,7 @@ public override async Task<Person> GetByIdAsync(string id)
             return await _context.People
                             .Where(p => p.Role.Description.ToUpper() == "PROVEEDOR" )
                             .Include(p => p.Role)
+                            .Include(p => p.IdentificationType)
                             .Include(p => p.Products)
                             .ToListAsync();
     }
@@ -261,7 +262,8 @@ public override async Task<Person> GetByIdAsync(string id)
         return await _context.People
                 .Where(p => p.Role.Description.ToUpper() == "PROVEEDOR")
                 .Where(p => p.Products.Any(p => p.Stock < amount))
-                .Include(p => p.Products)
+                .Include(p => p.Products
+                .Where(pr => pr.Stock < amount))
                 .ToListAsync();
     }
 
