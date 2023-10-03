@@ -27,7 +27,7 @@ public class RecipeController : BaseApiController
     }
 
 
-    [HttpGet("{date}")]
+    [HttpGet("RecordsByDate/{date}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IEnumerable<RecipeDto>> Get2(DateTime date)

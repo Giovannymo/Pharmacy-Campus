@@ -222,7 +222,7 @@ namespace Persistence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("HireDate")
+                    b.Property<DateTime?>("HireDate")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Identification")
@@ -233,7 +233,7 @@ namespace Persistence.Data.Migrations
                     b.Property<int>("IdentificationType_Fk")
                         .HasColumnType("int");
 
-                    b.Property<int>("JobTitle_Fk")
+                    b.Property<int?>("JobTitle_Fk")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -244,7 +244,8 @@ namespace Persistence.Data.Migrations
                     b.Property<int>("PersonType_Fk")
                         .HasColumnType("int");
 
-                    b.Property<int>("Role_Fk")
+                    b.Property<int?>("Role_Fk")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -579,14 +580,14 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("varchar")
                         .HasColumnName("email");
 
-                    b.Property<int>("Employee_Fk")
-                        .HasColumnType("int");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar")
                         .HasColumnName("password");
+
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -596,7 +597,7 @@ namespace Persistence.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Employee_Fk");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -686,9 +687,7 @@ namespace Persistence.Data.Migrations
 
                     b.HasOne("Domain.Entities.JobTitle", "JobTitle")
                         .WithMany("People")
-                        .HasForeignKey("JobTitle_Fk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JobTitle_Fk");
 
                     b.HasOne("Domain.Entities.PersonType", "PersonType")
                         .WithMany("People")
@@ -879,13 +878,9 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.HasOne("Domain.Entities.Person", "Employee")
+                    b.HasOne("Domain.Entities.Person", null)
                         .WithMany("Users")
-                        .HasForeignKey("Employee_Fk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
+                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserRole", b =>

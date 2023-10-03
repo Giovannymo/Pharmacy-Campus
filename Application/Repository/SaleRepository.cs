@@ -13,12 +13,16 @@ public class SaleRepository : GenericRepository<Sale>, ISale
         _context = context;
     }
 
-    public async Task<int> GetSaleProductCount(string product)
+    //Total de ventas del medicamento (X) (OK)
+    public async Task<decimal> GetTotalSaleProduct(string product)
     {
-        return await (from p in _context.Products 
-                    join sp in _context.SaleProducts on p.Id equals sp.Product_Fk
-                    where p.Name.ToUpper() == product.ToUpper()
-                    select sp).CountAsync();
-    }
+        var saleProducts = await _context.SaleProducts
+        .Where(sp => sp.Product.Name.ToUpper() == product.ToUpper())
+        .ToListAsync();
 
+        // Calcular el total de ventas sumando la cantidad vendida por producto
+        decimal totalSales = saleProducts.Sum(sp => sp.Price);
+
+        return totalSales;
+    }
 }

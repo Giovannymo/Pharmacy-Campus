@@ -1,4 +1,3 @@
-
 using ApiPharmacy.Dtos;
 using AutoMapper;
 using Domain.Interfaces;
@@ -17,17 +16,17 @@ public class SalesController : BaseApiController
         _mapper = mapper;
     }
 
-
+    //Total de ventas del medicamento (X)
     [HttpGet("{Product}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Get(string product)
     {
-        var count = await _unitOfWork.Sales.GetSaleProductCount(product);
+        var count = await _unitOfWork.Sales.GetTotalSaleProduct(product);
 
-        var dto = new SaleProductCountDto
+        var dto = new TotalSaleProductDto
         {
-            Quantity = count
+            TotalSales = count
         };
 
         return Ok(dto);

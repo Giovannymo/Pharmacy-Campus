@@ -5,7 +5,7 @@
 namespace Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationMilthon : Migration
+    public partial class Migration0210 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

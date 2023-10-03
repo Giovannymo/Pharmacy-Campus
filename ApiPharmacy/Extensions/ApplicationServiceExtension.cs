@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ApiPharmacy.Services;
+using API.Services;
 namespace ApiPharmacy.Extensions;
 public static class ApplicationServiceExtension
 {
@@ -18,13 +20,12 @@ public static class ApplicationServiceExtension
                 .AllowAnyHeader());         //WithHeaders(*accept*, "content-type")
             });
     
-    public static void AddApplicationServices(this IServiceCollection services) 
-        {
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
-            services.AddScoped<IPasswordHasher<User>,PasswordHasher<User>>();
-        }
-
-
+    public static void AddAplicacionServices(this IServiceCollection services)
+    {
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+    }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
 
     {

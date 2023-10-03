@@ -8,7 +8,6 @@ public class Product : BaseEntity
     public DateTime ExpirationDate  { get; set; }
     public int Supplier_Fk { get; set; }
     public Person Supplier { get; set; }
-
     public ICollection<SaleProduct> SaleProducts { get; set; }
     public ICollection<RecipeProduct> RecipeProducts { get; set; }
     public ICollection<PurchaseProduct> PurchaseProducts { get; set; }

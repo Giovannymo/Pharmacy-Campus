@@ -25,7 +25,7 @@ public interface IUnitOfWork
      ITelephone Telephones { get; }
      ITelephoneType TelephoneTypes { get; }
      IUser Users { get; }
-     IRole Roles { get; }
+     //se cambio, ya que, el jobtitle actual como rol en este caso
      
      Task<int> SaveAsync();
 

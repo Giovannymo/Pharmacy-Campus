@@ -10,7 +10,7 @@ builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
     options.ReturnHttpNotAcceptable = true;
-}).AddXmlSerializerFormatters(); 
+})/* .AddXmlSerializerFormatters() */;  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.ConfigureCors(); // aplica el cors de serviceExtension
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly()); // aplica automapper
 builder.Services.AddJwt(builder.Configuration); //Aplicacion de JWT
-builder.Services.AddApplicationServices(); // para que aplique el archivo de extensions
+builder.Services.AddAplicacionServices(); // para que aplique el archivo de extensions
 builder.Services.AddDbContext<PharmacyContext>(options =>
 {
     string connectionString = builder.Configuration.GetConnectionString("ConexMysql");
